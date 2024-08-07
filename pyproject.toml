@@ -12,6 +12,7 @@ torch = {url = "https://download.pytorch.org/whl/cu117/torch-2.0.1%2Bcu117-cp310
 torchvision = {url = "https://download.pytorch.org/whl/cu117/torchvision-0.15.2%2Bcu117-cp310-cp310-linux_x86_64.whl"}
 transformers = "^4.34.0"
 diffusers = "^0.21.4"
+accelerate = "^0.23.0"
 numpy = "1.26.4"
 inflect = "^7.0.0"
 ipykernel = "^6.29.5"
