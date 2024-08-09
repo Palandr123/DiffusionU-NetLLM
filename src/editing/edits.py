@@ -38,4 +38,20 @@ def preserve(
         attn = attn[..., idxs]
         target_attn = target_attn[..., idxs]
     x1, y1, x2, y2 = box_orig
-    return ((attn[:,y1:y2, x1:x2]-target_attn[:,y1:y2, x1:x2])**2).mean()
+    return ((attn[:,:, y1:y2, x1:x2]-target_attn[:,:,y1:y2, x1:x2])**2).mean()
+
+
+def preserve_background(
+    aux: torch.Tensor,
+    i: int,
+    target_aux: torch.Tensor,
+    mask: torch.Tensor,
+    idxs: np.ndarray[np.int64] | None = None,
+    ):
+    attn = aux[i]
+    target_attn = target_aux[i].to(attn.device)
+
+    if idxs is not None:
+        attn = attn[..., idxs]
+        target_attn = target_attn[..., idxs]
+    return ((attn * mask.to(attn.device) - target_attn * mask.to(attn.device))**2).mean()

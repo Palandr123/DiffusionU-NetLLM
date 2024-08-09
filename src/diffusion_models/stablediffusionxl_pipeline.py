@@ -10,7 +10,7 @@ from diffusers.pipelines.stable_diffusion_xl.pipeline_output import (
 )
 
 from src.editing import search_sequence_numpy
-from src.editing.edits import preserve
+from src.editing.edits import preserve, preserve_background
 
 
 class SDXLEditingPipeline(StableDiffusionXLPipeline):
@@ -324,6 +324,20 @@ class SDXLEditingPipeline(StableDiffusionXLPipeline):
                         key_aux = sg_aux["last_feats"]
                         tgt = edit.get("tgt", None)
                         tgt = tgt["last_feats"]
+                        mask = torch.ones(key_aux["up_blocks.2"][i].shape)
+                        for name, object_list in detections.items():
+                            for id, box in enumerate(object_list):
+                                box_preserve = [2 * x for x in box]
+                                x1, y1, x2, y2 = box_preserve
+                                mask[:, :, y1:y2, x1:x2] = 0.0
+                                if name == target_object[0] and id == target_object[1]:
+                                    shift = edit.get("kwargs", {}).get("shift", (0, 0))
+                                    x, y = shift
+                                    x1 += 2 * x
+                                    x2 += 2 * x
+                                    y1 += 2 * y
+                                    y2 += 2 * y
+                                    mask[:, :, y1:y2, x1:x2] = 0.0
 
                         for name, object_list in detections.items():
                             for id, box in enumerate(object_list):
@@ -346,6 +360,16 @@ class SDXLEditingPipeline(StableDiffusionXLPipeline):
                                         ),
                                     )
                                     losses.append(loss.cpu())
+
+                        for k, v in key_aux.items():
+                            loss = edit["w2"] * preserve_background(
+                                v,
+                                i=i,
+                                idxs=None,
+                                mask=mask,
+                                target_aux=tgt[k] if tgt is not None else None,
+                            )
+                            losses.append(loss.cpu())
 
                         if len(losses) != 0:
                             preserve_loss = torch.stack(losses).mean()
