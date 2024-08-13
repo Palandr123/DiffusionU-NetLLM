@@ -19,11 +19,11 @@ from scipy.optimize import linear_sum_assignment
 import hydra
 from omegaconf import DictConfig
 
-from editing_diffusion.diffusion_models import SDXLEditingPipeline
-from editing_diffusion.editing import CustomAttentionProcessor
-from editing_diffusion.llm_objects import spot_objects
-from editing_diffusion.detectors.owlvitv2 import OWLViTv2Detector
-from editing_diffusion.editing.edits import position
+from src.diffusion_models import SDXLEditingPipeline
+from src.editing import CustomAttentionProcessor
+from src.llm_objects import spot_objects
+from src.detectors.owlvitv2 import OWLViTv2Detector
+from src.editing.edits import position
 
 
 _SG_RES = 64
