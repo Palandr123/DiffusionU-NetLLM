@@ -18,6 +18,7 @@ inflect = "^7.0.0"
 ipykernel = "^6.29.5"
 matplotlib = "^3.9.1.post1"
 scipy = "^1.11.3"
+pandas = "^2.2.2"
 
 [build-system]
 requires = ["poetry-core"]
