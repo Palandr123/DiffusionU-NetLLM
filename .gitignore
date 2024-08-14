@@ -1,1 +1,6 @@
 __pycache__
+outputs
+images/*/*
+*.txt
+*.csv
+nohup.out
