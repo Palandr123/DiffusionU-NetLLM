@@ -1,0 +1,9 @@
+path: captions.txt
+device: cuda:1
+llm_device: cuda:2
+orig_dir: images/orig
+edited_dir: images/edited
+w_position: 7.5
+w_preserve: 30.0
+w_background: 30.0
+num: 20

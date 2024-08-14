@@ -127,7 +127,7 @@ def main(cfg: DictConfig):
     base.to(cfg.device)
     base.scheduler = diffusers.DDPMScheduler.from_config(base.scheduler.config)
 
-    model_name = "google/gemma-7b-it"  # "mistralai/Mistral-7B-Instruct-v0.1" #"google/gemma-7b-it" #"mistralai/Mistral-7B-Instruct-v0.1"
+    model_name = "google/gemma-7b-it"
     # Load the model and tokenizer
     llm = AutoModelForCausalLM.from_pretrained(model_name).eval().to(cfg.llm_device)
     tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -163,9 +163,10 @@ def main(cfg: DictConfig):
 
     preprocess_dino = AutoImageProcessor.from_pretrained('facebook/dinov2-base')
     model_dino = AutoModel.from_pretrained('facebook/dinov2-base')
+    count = 0
     for i, line in enumerate(lines):
         torch.cuda.empty_cache()
-        if i == 1:
+        if count == cfg.num:
             break
         model_params = {
             "max_new_tokens": 200,
@@ -312,14 +313,13 @@ def main(cfg: DictConfig):
             "words": manipulated_type,
             "mode": "attn",
             "mode_preserve": ["attn", "last_feats"],
-            "weight": 20.0,
+            "weight": cfg.w_position,
             "kwargs": {
                 "shift": (x_manipulation, y_manipulation),
                 "box_orig": results_new_detection[manipulated_type][manipulated_id],
             },
-            "w1": 50.0,
-            "w2": 20.0,
-            "weight_preserve": 20.0,
+            "weight_preserve": cfg.w_preserve,
+            "w2": cfg.w_background,
             "tgt": processed_aux,
         }
 
@@ -500,6 +500,7 @@ def main(cfg: DictConfig):
                 "DINO_score_image": dino_score.item(),
             }
         )
+        count += 1
     pd.DataFrame(df).to_csv("manipulations.csv", index=False)
 
     logger.info(f"Total time: {time.time() - start_time}")
