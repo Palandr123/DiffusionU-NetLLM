@@ -24,3 +24,9 @@ Our pipeline is the following:
 6. The image is edited with the use of guidance based on intermediate features and cross-attention maps in the diffusion model
 
 Note that this pipeline uses only pretrained models and does not require any training or fine-tuning.
+
+## Results
+
+a) Move bottle by (−0.5, 0)
+
+<img src="figs/bottle_orig.jpg" width="425"/> <img src="figs/bottle_our.jpg" width="425"/> 
