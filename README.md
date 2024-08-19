@@ -29,4 +29,4 @@ Note that this pipeline uses only pretrained models and does not require any tra
 
 a) Move bottle by (−0.5, 0)
 
-<img src="figs/bottle_orig.jpg" width="425"/> <img src="figs/bottle_our.jpg" width="425"/> 
+<img src="figs/bottle_orig.jpg" width="300"/> <img src="figs/bottle_our.jpg" width="300"/> 
